@@ -3,6 +3,8 @@ fn main() {
   day1(include_str!("../inputs/1.txt"), true);
   day2(include_str!("../inputs/2.txt"), false);
   day2(include_str!("../inputs/2.txt"), true);
+  day4(include_str!("../inputs/4.txt"), false);
+  day4(include_str!("../inputs/4.txt"), true);
 }
 
 fn day1(input: &str, part2: bool) {
@@ -59,4 +61,35 @@ fn day2(input: &str, part2: bool) {
     }
   }
   println!("{}", total);
+}
+
+fn day4(input: &str, part2: bool) {
+  let mut total = 0;
+  let mut copies = vec![1u32; input.lines().count()];
+  for (i, l) in input.lines().enumerate() {
+    let nums = l
+      .split([':', '|'])
+      .map(|s| s.split_whitespace().collect::<Vec<_>>())
+      .collect::<Vec<_>>();
+    let mut card = 0;
+    for w in &nums[1] {
+      if nums[2].contains(w) {
+        card += 1;
+      }
+    }
+    if part2 {
+      for s in 0..card as _ {
+        if i + 1 + s < copies.len() {
+          copies[i + 1 + s] += copies[i];
+        }
+      }
+    } else {
+      total += if card == 0 { 0 } else { 2i32.pow(card - 1) };
+    }
+  }
+  if part2 {
+    println!("{}", copies.into_iter().sum::<u32>());
+  } else {
+    println!("{}", total);
+  }
 }
