@@ -1,4 +1,4 @@
-pub fn main(input: &str, part2: bool) -> u32 {
+pub fn main(input: &str, part2: bool) -> usize {
   let mut total = 0;
   for (i, l) in input.lines().enumerate() {
     let mut possible = true;
@@ -28,5 +28,5 @@ pub fn main(input: &str, part2: bool) -> u32 {
       total += red * green * blue;
     }
   }
-  total as _
+  total
 }
