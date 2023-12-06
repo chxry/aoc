@@ -8,12 +8,15 @@ pub fn day(input: TokenStream) -> TokenStream {
   let path = format!("{}.rs", n);
   let input = format!("../inputs/{}.txt", n);
   quote! {{
+    use std::time::Instant;
     #[path = #path]
     mod day;
     let input = include_str!(#input);
     println!("- day {}:",#n);
-    println!("  part 1: {}", day::main(input,false));
-    println!("  part 2: {}", day::main(input, true));
+    let start = Instant::now();
+    println!("  part 1: {} ({:?})", day::main(input, false), Instant::now().duration_since(start));
+    let start = Instant::now();
+    println!("  part 2: {} ({:?})", day::main(input, true), Instant::now().duration_since(start));
   }}
   .into()
 }
