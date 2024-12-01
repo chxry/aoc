@@ -1,16 +1,8 @@
 #![feature(array_chunks)]
-use macros::day;
+use macros::year;
 
 fn main() {
-  // day!(1);
-  // day!(2);
-  // day!(4);
-  // day!(5);
-  // day!(6);
-  // day!(7);
-  // day!(8);
-  // day!(9);
-  day!(10);
+  year!(2024);
 }
 
 pub fn lcm(n: &[usize]) -> usize {
