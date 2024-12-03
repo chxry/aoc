@@ -1,9 +1,9 @@
-use crate::parse;
+use crate::*;
 
 pub fn main(input: &str, part2: bool) -> i32 {
   let mut safe_num = 0;
   for l in input.lines() {
-    let nums: Vec<i32> = l.split(" ").map(parse).collect();
+    let nums = l.split(" ").map(parse).to_vec();
     if part2 {
       for n in 0..nums.len() {
         let mut nums = nums.clone();

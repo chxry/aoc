@@ -1,5 +1,5 @@
 use regex::Regex;
-use crate::parse;
+use crate::*;
 
 pub fn main(input: &str, part2: bool) -> i32 {
   let res = [
