@@ -20,3 +20,7 @@ pub fn hcf(a: usize, b: usize) -> usize {
   }
   hcf(b, a % b)
 }
+
+pub fn parse(s: &str) -> i32 {
+  s.parse().expect("parse failed")
+}

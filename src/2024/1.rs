@@ -1,8 +1,10 @@
-pub fn main(input: &str, part2: bool) -> u32 {
+use crate::parse;
+
+pub fn main(input: &str, part2: bool) -> i32 {
   let (mut left, mut right): (Vec<_>, Vec<_>) = input
     .lines()
     .map(|l| {
-      let mut s = l.split_whitespace().map(|s| s.parse::<u32>().unwrap());
+      let mut s = l.split_whitespace().map(parse);
       (s.next().unwrap(), s.next().unwrap())
     })
     .unzip();
@@ -10,7 +12,7 @@ pub fn main(input: &str, part2: bool) -> u32 {
   if part2 {
     left
       .iter()
-      .map(|n| n * right.iter().filter(|m| n == *m).count() as u32)
+      .map(|n| n * right.iter().filter(|m| n == *m).count() as i32)
       .sum()
   } else {
     left.sort();
@@ -19,6 +21,6 @@ pub fn main(input: &str, part2: bool) -> u32 {
     left
       .iter()
       .zip(right.iter())
-      .fold(0, |x, (l, r)| x + l.abs_diff(*r))
+      .fold(0, |x, (l, r)| x + (l - r).abs())
   }
 }

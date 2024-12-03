@@ -1,7 +1,9 @@
-pub fn main(input: &str, part2: bool) -> u32 {
+use crate::parse;
+
+pub fn main(input: &str, part2: bool) -> i32 {
   let mut safe_num = 0;
   for l in input.lines() {
-    let nums: Vec<i32> = l.split(" ").map(|s| s.parse().unwrap()).collect();
+    let nums: Vec<i32> = l.split(" ").map(parse).collect();
     if part2 {
       for n in 0..nums.len() {
         let mut nums = nums.clone();
@@ -11,10 +13,8 @@ pub fn main(input: &str, part2: bool) -> u32 {
           break;
         }
       }
-    } else {
-      if safe(&nums) {
-        safe_num += 1;
-      }
+    } else if safe(&nums) {
+      safe_num += 1;
     }
   }
   safe_num
@@ -27,5 +27,5 @@ fn safe(nums: &[i32]) -> bool {
       return false;
     }
   }
-  return true;
+  true
 }
