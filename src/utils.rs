@@ -64,6 +64,10 @@ impl<T, N: Idx> Index<N> for Grid<T> {
   }
 }
 
+pub fn idx_of<T: Eq>(v: &Vec<T>, t: &T) -> Option<usize> {
+  v.iter().position(|x| x == t)
+}
+
 pub trait IteratorExt<I> {
   fn n<N: Idx>(&mut self, i: N) -> I;
   fn to_vec(self) -> Vec<I>;
