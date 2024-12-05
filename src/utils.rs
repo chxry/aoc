@@ -19,7 +19,8 @@ pub fn hcf<N: Num>(a: N, b: N) -> N {
 }
 
 pub fn parse(s: &str) -> i32 {
-  s.parse().expect("parse failed")
+  s.parse()
+    .unwrap_or_else(|_| panic!("parsing {:?} failed", s))
 }
 
 pub struct Grid<T> {
@@ -38,13 +39,9 @@ impl Grid<char> {
 }
 
 impl<T> Grid<T> {
-  pub fn width(&self) -> usize {
-    self.width
-  }
+  pub fn width(&self) -> usize { self.width }
 
-  pub fn height(&self) -> usize {
-    self.data.len() / self.width
-  }
+  pub fn height(&self) -> usize { self.data.len() / self.width }
 
   pub fn valid_x<N: Idx>(&self, x: N) -> bool {
     x.try_into().is_ok_and(|x| (0..self.width()).contains(&x))
@@ -64,24 +61,51 @@ impl<T, N: Idx> Index<N> for Grid<T> {
   }
 }
 
-pub fn idx_of<T: Eq>(v: &Vec<T>, t: &T) -> Option<usize> {
-  v.iter().position(|x| x == t)
-}
-
 pub trait IteratorExt<I> {
   fn n<N: Idx>(&mut self, i: N) -> I;
+  fn idx_of<J: PartialEq<I>>(&mut self, item: J) -> Option<usize>;
   fn to_vec(self) -> Vec<I>;
+  fn to_arr<const N: usize>(self) -> [I; N];
 }
 
-impl<I, T: Iterator<Item = I> + Clone> IteratorExt<I> for T {
+impl<I, T: Iterator<Item = I>> IteratorExt<I> for T {
   fn n<N: Idx>(&mut self, i: N) -> I {
     self
       .nth(i.try_into().unwrap())
-      .expect(&format!("index {:?} out of bounds", i))
+      .unwrap_or_else(|| panic!("index {:?} out of bounds", i))
   }
 
-  fn to_vec(self) -> Vec<I> {
-    self.collect()
+  fn idx_of<J: PartialEq<I>>(&mut self, item: J) -> Option<usize> { self.position(|x| item == x) }
+
+  fn to_vec(self) -> Vec<I> { self.collect() }
+
+  fn to_arr<const N: usize>(mut self) -> [I; N] {
+    self
+      .next_chunk()
+      .unwrap_or_else(|e| panic!("expected {} values, found {}", N, e.count()))
+  }
+}
+
+pub trait ListExt<I> {
+  fn idx_of<J: PartialEq<I>>(&self, item: J) -> Option<usize>;
+  fn find_subs<J: PartialEq<I>>(&self, items: &[J]) -> impl Iterator<Item = usize>;
+}
+
+impl<I> ListExt<I> for [I] {
+  fn idx_of<J: PartialEq<I>>(&self, item: J) -> Option<usize> { self.iter().idx_of(&item) }
+
+  fn find_subs<J: PartialEq<I>>(&self, items: &[J]) -> impl Iterator<Item = usize> {
+    self
+      .windows(items.len())
+      .enumerate()
+      .filter_map(move |(i, x)| (items == x).then_some(i))
+  }
+}
+
+impl<I> ListExt<I> for Vec<I> {
+  fn idx_of<J: PartialEq<I>>(&self, item: J) -> Option<usize> { self.as_slice().idx_of(item) }
+  fn find_subs<J: PartialEq<I>>(&self, items: &[J]) -> impl Iterator<Item = usize> {
+    self.as_slice().find_subs(items)
   }
 }
 
@@ -113,7 +137,5 @@ impl<
     E: Error,
   > Num for T
 {
-  fn n(i: isize) -> Self {
-    i.try_into().unwrap()
-  }
+  fn n(i: isize) -> Self { i.try_into().unwrap() }
 }

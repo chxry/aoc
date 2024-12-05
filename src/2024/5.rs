@@ -1,17 +1,12 @@
 use crate::*;
 
 pub fn main(input: &str, part2: bool) -> i32 {
-  let mut parts = input.split("\n\n");
-  let rules = parts
-    .n(0)
+  let parts = input.split("\n\n").to_arr::<2>();
+  let rules = parts[0]
     .lines()
-    .map(|l| {
-      let mut s = l.split("|").map(parse);
-      (s.n(0), s.n(0))
-    })
+    .map(|l| l.split("|").map(parse).to_arr())
     .to_vec();
-  let mut updates = parts
-    .n(0)
+  let mut updates = parts[1]
     .lines()
     .map(|l| l.split(",").map(parse).to_vec())
     .to_vec();
@@ -36,9 +31,9 @@ pub fn main(input: &str, part2: bool) -> i32 {
   sum
 }
 
-fn check(update: &mut Vec<i32>, rules: &[(i32, i32)], fix: bool) -> bool {
+fn check(update: &mut Vec<i32>, rules: &[[i32; 2]], fix: bool) -> bool {
   for r in rules {
-    if let (Some(a), Some(b)) = (idx_of(update, &r.0), idx_of(update, &r.1))
+    if let (Some(a), Some(b)) = (update.idx_of(r[0]), update.idx_of(r[1]))
       && a > b
     {
       if fix {
