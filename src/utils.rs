@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use std::error::Error;
-use std::ops::{Add, Sub, Mul, Div, Rem, Index};
+use std::ops::{Add, Sub, Mul, Div, Rem, Index, IndexMut};
 
 pub fn lcm<N: Num>(n: &[N]) -> N {
   if n.len() == 1 {
@@ -23,6 +23,7 @@ pub fn parse(s: &str) -> i32 {
     .unwrap_or_else(|_| panic!("parsing {:?} failed", s))
 }
 
+#[derive(Clone)]
 pub struct Grid<T> {
   pub data: Vec<T>,
   width: usize,
@@ -50,6 +51,14 @@ impl<T> Grid<T> {
   pub fn valid_y<N: Idx>(&self, y: N) -> bool {
     y.try_into().is_ok_and(|y| (0..self.height()).contains(&y))
   }
+
+  pub fn find<P: Fn(&T) -> bool>(&self, predicate: P) -> Option<(usize, usize)> {
+    self
+      .data
+      .iter()
+      .position(predicate)
+      .map(|i| (i % self.width, i / self.width))
+  }
 }
 
 impl<T, N: Idx> Index<N> for Grid<T> {
@@ -58,6 +67,13 @@ impl<T, N: Idx> Index<N> for Grid<T> {
   fn index(&self, i: N) -> &[T] {
     let start = i.try_into().unwrap() * self.width;
     &self.data[start..start + self.width]
+  }
+}
+
+impl<T, N: Idx> IndexMut<N> for Grid<T> {
+  fn index_mut(&mut self, i: N) -> &mut [T] {
+    let start = i.try_into().unwrap() * self.width;
+    &mut self.data[start..start + self.width]
   }
 }
 
@@ -106,6 +122,34 @@ impl<I> ListExt<I> for Vec<I> {
   fn idx_of<J: PartialEq<I>>(&self, item: J) -> Option<usize> { self.as_slice().idx_of(item) }
   fn find_subs<J: PartialEq<I>>(&self, items: &[J]) -> impl Iterator<Item = usize> {
     self.as_slice().find_subs(items)
+  }
+}
+
+#[derive(PartialEq, Eq, Hash, Copy, Clone)]
+pub enum Dir {
+  Up,
+  Right,
+  Down,
+  Left,
+}
+
+impl Dir {
+  pub fn xy(&self) -> (i32, i32) {
+    match self {
+      Dir::Up => (0, -1),
+      Dir::Right => (1, 0),
+      Dir::Down => (0, 1),
+      Dir::Left => (-1, 0),
+    }
+  }
+
+  pub fn right(&self) -> Self {
+    match self {
+      Dir::Up => Dir::Right,
+      Dir::Right => Dir::Down,
+      Dir::Down => Dir::Left,
+      Dir::Left => Dir::Up,
+    }
   }
 }
 
