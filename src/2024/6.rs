@@ -3,29 +3,31 @@ use crate::*;
 
 pub fn main(input: &str, part2: bool) -> usize {
   let grid = Grid::from_str(input);
+  let visited = check(&grid)
+    .unwrap()
+    .into_iter()
+    .map(|p| (p.0, p.1))
+    .dedup();
   if part2 {
     let mut obstructions = 0;
-    for y in 0..grid.height() {
-      for x in 0..grid.width() {
-        if grid[y][x] == '.' {
-          let mut grid = grid.clone();
-          grid[y][x] = '#';
-          if check(&grid).is_none() {
-            obstructions += 1;
-          }
+    for (x, y) in visited {
+      if grid[y][x as usize] == '.' {
+        let mut grid = grid.clone();
+        grid[y][x as usize] = '#';
+        if check(&grid).is_none() {
+          obstructions += 1;
         }
       }
     }
     obstructions
   } else {
-    check(&grid).unwrap()
+    visited.count()
   }
 }
 
-fn check(grid: &Grid<char>) -> Option<usize> {
+fn check(grid: &Grid<char>) -> Option<HashSet<(i32, i32, Dir)>> {
   let (mut x, mut y) = grid.find(|c| *c == '^').unwrap();
   let mut dir = Dir::Up;
-  let mut positions = HashSet::new();
   let mut visited = HashSet::new();
   loop {
     let (dx, dy) = dir.xy();
@@ -36,13 +38,12 @@ fn check(grid: &Grid<char>) -> Option<usize> {
       } else {
         x = nx as _;
         y = ny as _;
-        positions.insert((nx, ny));
         if !visited.insert((nx, ny, dir)) {
           return None;
         }
       }
     } else {
-      return Some(positions.len());
+      return Some(visited);
     }
   }
 }

@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+use std::hash::Hash;
 use std::fmt::Debug;
 use std::error::Error;
 use std::ops::{Add, Sub, Mul, Div, Rem, Index, IndexMut};
@@ -82,6 +84,9 @@ pub trait IteratorExt<I> {
   fn idx_of<J: PartialEq<I>>(&mut self, item: J) -> Option<usize>;
   fn to_vec(self) -> Vec<I>;
   fn to_arr<const N: usize>(self) -> [I; N];
+  fn dedup(self) -> impl Iterator<Item = I>
+  where
+    I: PartialEq + Eq + Hash;
 }
 
 impl<I, T: Iterator<Item = I>> IteratorExt<I> for T {
@@ -99,6 +104,13 @@ impl<I, T: Iterator<Item = I>> IteratorExt<I> for T {
     self
       .next_chunk()
       .unwrap_or_else(|e| panic!("expected {} values, found {}", N, e.count()))
+  }
+
+  fn dedup(self) -> impl Iterator<Item = I>
+  where
+    I: PartialEq + Eq + Hash,
+  {
+    self.collect::<HashSet<I>>().into_iter()
   }
 }
 
