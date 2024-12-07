@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::str::FromStr;
 use std::hash::Hash;
 use std::fmt::Debug;
 use std::error::Error;
@@ -20,7 +21,7 @@ pub fn hcf<N: Num>(a: N, b: N) -> N {
   hcf(b, a % b)
 }
 
-pub fn parse(s: &str) -> i32 {
+pub fn parse<F: FromStr>(s: &str) -> F {
   s.parse()
     .unwrap_or_else(|_| panic!("parsing {:?} failed", s))
 }

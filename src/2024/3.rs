@@ -18,7 +18,7 @@ pub fn main(input: &str, part2: bool) -> i32 {
   let mut sum = 0;
   for (i, _, c) in matches {
     match i {
-      0 if enabled => sum += parse(&c[1]) * parse(&c[2]),
+      0 if enabled => sum += parse::<i32>(&c[1]) * parse::<i32>(&c[2]),
       1 if part2 => enabled = true,
       2 if part2 => enabled = false,
       _ => {}

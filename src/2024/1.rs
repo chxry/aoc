@@ -4,7 +4,7 @@ pub fn main(input: &str, part2: bool) -> i32 {
   let (mut left, mut right): (Vec<_>, Vec<_>) = input
     .lines()
     .map(|l| {
-      let s = l.split_whitespace().map(parse).to_arr::<2>();
+      let s = l.split_whitespace().map(parse::<i32>).to_arr::<2>();
       (s[0], s[1])
     })
     .unzip();
