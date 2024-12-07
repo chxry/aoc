@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 macros = { path = "macros" }
 regex = "1.11"
+ordermap = "0.5"

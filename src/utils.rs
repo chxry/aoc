@@ -1,9 +1,9 @@
-use std::collections::HashSet;
 use std::str::FromStr;
 use std::hash::Hash;
 use std::fmt::Debug;
 use std::error::Error;
 use std::ops::{Add, Sub, Mul, Div, Rem, Index, IndexMut};
+use ordermap::OrderSet;
 
 pub fn lcm<N: Num>(n: &[N]) -> N {
   if n.len() == 1 {
@@ -111,7 +111,7 @@ impl<I, T: Iterator<Item = I>> IteratorExt<I> for T {
   where
     I: PartialEq + Eq + Hash,
   {
-    self.collect::<HashSet<I>>().into_iter()
+    self.collect::<OrderSet<I>>().into_iter()
   }
 }
 
