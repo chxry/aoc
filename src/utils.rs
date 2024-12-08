@@ -42,6 +42,15 @@ impl Grid<char> {
   }
 }
 
+impl<T: Clone> Grid<T> {
+  pub fn new(default: T, width: usize, height: usize) -> Self {
+    Self {
+      data: vec![default; width * height],
+      width,
+    }
+  }
+}
+
 impl<T> Grid<T> {
   pub fn width(&self) -> usize { self.width }
 
@@ -53,6 +62,16 @@ impl<T> Grid<T> {
 
   pub fn valid_y<N: Idx>(&self, y: N) -> bool {
     y.try_into().is_ok_and(|y| (0..self.height()).contains(&y))
+  }
+
+  pub fn valid_coord<N: Idx>(&self, (x, y): (N, N)) -> bool { self.valid_x(x) && self.valid_y(y) }
+
+  pub fn map(&self) -> impl Iterator<Item = ((usize, usize), &T)> {
+    self
+      .data
+      .iter()
+      .enumerate()
+      .map(|(i, t)| ((i % self.width, i / self.width), t))
   }
 
   pub fn find<P: Fn(&T) -> bool>(&self, predicate: P) -> Option<(usize, usize)> {

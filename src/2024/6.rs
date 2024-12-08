@@ -34,7 +34,7 @@ fn check(grid: &Grid<char>, visited: &mut OrderSet<(i32, i32, Dir)>) -> bool {
   loop {
     let (dx, dy) = dir.xy();
     let (nx, ny) = (x + dx, y + dy);
-    if grid.valid_x(nx) && grid.valid_y(ny) {
+    if grid.valid_coord((nx, ny)) {
       if grid[ny][nx as usize] == '#' {
         dir = dir.right();
       } else {
