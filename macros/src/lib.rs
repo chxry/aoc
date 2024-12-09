@@ -26,7 +26,7 @@ pub fn day(input: TokenStream) -> TokenStream {
     use std::time::Instant;
     #[path = #path]
     mod day;
-    let input = include_str!(#input);
+    let input = include_str!(#input).trim();
     println!("- day {}:" ,#n);
     let start = Instant::now();
     println!("  part 1: {} ({:?})", day::main(input, false), start.elapsed());
