@@ -66,7 +66,7 @@ impl<T> Grid<T> {
 
   pub fn valid_coord<N: Idx>(&self, (x, y): (N, N)) -> bool { self.valid_x(x) && self.valid_y(y) }
 
-  pub fn map(&self) -> impl Iterator<Item = ((usize, usize), &T)> {
+  pub fn enumerate(&self) -> impl Iterator<Item = ((usize, usize), &T)> {
     self
       .data
       .iter()
@@ -80,6 +80,13 @@ impl<T> Grid<T> {
       .iter()
       .position(predicate)
       .map(|i| (i % self.width, i / self.width))
+  }
+
+  pub fn map<U, F: Fn(T) -> U>(self, f: F) -> Grid<U> {
+    Grid {
+      data: self.data.into_iter().map(f).to_vec(),
+      width: self.width,
+    }
   }
 }
 

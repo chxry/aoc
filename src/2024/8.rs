@@ -4,7 +4,7 @@ use crate::*;
 pub fn main(input: &str, part2: bool) -> usize {
   let grid = Grid::from_str(input);
   let mut antennas: HashMap<char, Vec<(i32, i32)>> = HashMap::new();
-  for (c, a) in grid.map() {
+  for (c, a) in grid.enumerate() {
     if *a == '.' {
       continue;
     }
