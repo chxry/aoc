@@ -113,7 +113,7 @@ pub trait IteratorExt<I> {
   fn to_arr<const N: usize>(self) -> [I; N];
   fn dedup(self) -> impl Iterator<Item = I>
   where
-    I: PartialEq + Eq + Hash;
+    I: Eq + Hash;
 }
 
 impl<I, T: Iterator<Item = I>> IteratorExt<I> for T {

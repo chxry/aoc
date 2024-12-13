@@ -45,7 +45,7 @@ pub fn main(input: &str, part2: bool) -> i32 {
 
 fn check(grid: &Grid<char>, mut x: i32, mut y: i32, dx: i32, dy: i32) -> bool {
   for c in XMAS {
-    if grid.valid_coord(x, y) && grid[y][x as usize] == c {
+    if grid.valid_coord((x, y)) && grid[y][x as usize] == c {
       x += dx;
       y += dy;
     } else {
