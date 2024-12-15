@@ -29,7 +29,7 @@ pub fn parse<F: FromStr>(s: &str) -> F {
 #[derive(Clone)]
 pub struct Grid<T> {
   pub data: Vec<T>,
-  width: usize,
+  pub width: usize,
 }
 
 impl Grid<char> {
@@ -38,6 +38,15 @@ impl Grid<char> {
     Self {
       data: s.lines().flat_map(|l| l.chars()).to_vec(),
       width,
+    }
+  }
+
+  pub fn print(&self) {
+    for y in 0..self.height() {
+      for x in 0..self.width() {
+        print!("{}", self[y][x]);
+      }
+      println!();
     }
   }
 }
