@@ -173,7 +173,7 @@ impl<I> ListExt<I> for Vec<I> {
   }
 }
 
-#[derive(PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub enum Dir {
   Up,
   Right,
@@ -197,6 +197,15 @@ impl Dir {
       Dir::Right => Dir::Down,
       Dir::Down => Dir::Left,
       Dir::Left => Dir::Up,
+    }
+  }
+
+  pub fn left(&self) -> Self {
+    match self {
+      Dir::Up => Dir::Left,
+      Dir::Right => Dir::Up,
+      Dir::Down => Dir::Right,
+      Dir::Left => Dir::Down,
     }
   }
 }
