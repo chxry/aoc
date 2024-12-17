@@ -13,25 +13,19 @@ pub fn main(input: &str, part2: bool) -> String {
     // - the number of digits is log_8(A)+1
     // - the 'period' of each digit is 8^n
     regs[0] = 8u64.pow(program.len() as u32 - 1);
-    let mut current_digit = program.len() - 1;
-    while current_digit > 1 {
+    'o: loop {
       let out = compute(regs, &program);
-      if out == program {
-        break;
+      let mut i = program.len();
+      while i > 0 {
+        i -= 1;
+        if out[i] != program[i] {
+          break;
+        }
+        if i == 0 {
+          break 'o;
+        }
       }
-      if out[current_digit] == program[current_digit] {
-        current_digit -= 1;
-      } else {
-        regs[0] += 8u64.pow(current_digit as _);
-      }
-    }
-    // brute force last digit ?
-    loop {
-      let out = compute(regs, &program);
-      if out == program {
-        break;
-      }
-      regs[0] += 1;
+      regs[0] += 8u64.pow(i as _);
     }
     regs[0].to_string()
   } else {
