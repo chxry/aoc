@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use crate::*;
 
 pub fn main(input: &str, part2: bool) -> i64 {
@@ -29,29 +30,29 @@ pub fn main(input: &str, part2: bool) -> i64 {
 
   if part2 {
     let mut highest = 0;
+    let mut seen = HashSet::new();
 
-    for a in -9..=9 {
-      for b in -9..=9 {
-        for c in -9..=9 {
-          for d in -9..=9 {
-            let p = [a, b, c, d];
-            let mut bananas = 0;
-            for (nv, dv) in &buyers {
-              for i in 0..(dv.len() - 3) {
-                if dv[i..i + 4] == p {
-                  bananas += nv[i + 4];
-                  break;
-                }
-              }
-            }
-            if bananas > highest {
-              highest = bananas;
+    for b in 0..buyers.len() {
+      let (_, dv) = &buyers[b];
+      for p in 0..dv.len() - 3 {
+        let pat = &dv[p..p + 4];
+        if !seen.insert(pat) {
+          continue;
+        }
+        let mut bananas = 0;
+        for (nv, dv) in &buyers {
+          for p2 in 0..dv.len() - 3 {
+            if dv[p2..p2 + 4] == *pat {
+              bananas += nv[p2 + 4];
+              break;
             }
           }
         }
+        if bananas > highest {
+          highest = bananas;
+        }
       }
     }
-
     highest
   } else {
     sum
