@@ -52,7 +52,7 @@ pub fn main(input: &str, part2: bool) -> i64 {
         };
         wires.insert(t.clone(), v);
       }
-      if complete == true {
+      if complete {
         break;
       }
     }
