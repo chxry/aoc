@@ -15,5 +15,4 @@ sol1 = sol 2
 sol2 = sol 12
 
 input = readFile "3.txt"
-test = sol2 <$> input
-
+test = fmap sol2 input

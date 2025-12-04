@@ -23,4 +23,4 @@ sol1 = sol invalid1
 sol2 = sol invalid2
 
 input = readFile "2.txt"
-test = sol2 <$> input
+test = fmap sol2 input

@@ -20,4 +20,4 @@ sol2 s =
   in sum (map snd zs)
 
 input = readFile "1.txt"
-test = sol2 <$> input
+test = fmap sol2 input

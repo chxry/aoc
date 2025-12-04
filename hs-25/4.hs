@@ -1,38 +1,23 @@
-neighbours (x, y) = [(x + dx, y + dy) | dx <- [-1, 0, 1], dy <- [-1, 0, 1], dx /= 0 || dy /= 0]
+import Grid
 
-get g (x, y) | x >= 0 && x < (width g) && y >= 0 && y < (height g) && (g !! y) !! x == '@' = 1
-             | otherwise = 0
+remove g@(G w h xs) = gridFromList w h [f (get g (x, y)) n | y <- [0..h - 1], x <- [0..w - 1], let n = sum (neighbours g 0 (x, y))]
+  where 
+      f 1 n | n < 4 = 0
+      f x n = x
 
-width = length . head
+count = sum . getList
 
-height = length
-
-remove g = [(x, y) | x <- [0..width g - 1], y <- [0..height g - 1], get g (x, y) == 1, let n = sum (map (get g) (neighbours (x, y))), n < 4]
-
-replace i x xs = take i xs ++ x : drop (i + 1) xs
-
-remove2 g = [[f (x, y) | x <- [0..width g - 1]] | y <- [0..height g - 1]]
-  where f (x, y) | get g (x, y) == 1 && n >= 4 = '@'
-                 | otherwise = '.'
-          where n = sum (map (get g) (neighbours (x, y)))
+parse s = mapGrid (\c -> if c == '@' then 1 else 0) (readGrid s)
 
 sol1 s =
-  let grid = lines s
-  in length (remove grid)
+  let grid = parse s
+  in count grid - count (remove grid)
 
 sol2 s =
-  -- let grid = lines s
-  --     f g = let d = remove g
-  --           in (foldr (\(x, y) g -> replace y (replace x '.' (g !! y)) g) g d, length d)
-  --     h g n | g' == g = n + dn
-  --           | otherwise = h g' (n + dn)
-  --       where (g', dn) = f g
-  -- in h grid 0
-  let grid = lines s
-      h g | remove2 g == g = g
-          | otherwise = h (remove2 g)
-      count g = sum (concatMap (map (\x -> if x == '@' then 1 else 0)) g)
-  in count grid - count (h grid)
-      
+  let grid = parse s
+      f g = let g' = remove g
+            in if g' == g then g else f g'
+  in count grid - count (f grid)
+
 input = readFile "4.txt"
-test = sol2 <$> input
+test = fmap sol2 input
