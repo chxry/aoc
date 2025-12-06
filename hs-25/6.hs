@@ -1,7 +1,7 @@
 import Data.List
 
-op '+' xs = sum xs
-op '*' xs = product xs
+op '+' = sum
+op '*' = product
 
 eval xs = op (head (last xs)) (map read (init xs))
 
@@ -16,11 +16,10 @@ nonempty = any (/=' ')
 
 sol2 s =
   let ls = lines s
-      ops = last ls
-      ops' = filter (/=' ') ops
-      offsets = tail [i | (x, i) <- zip ops [0..], x /= ' ']
-      rows = map (spliti offsets) (init ls)
-  in sum (zipWith op ops' (map (map read . filter nonempty .transpose) (transpose rows)))
+      (ops, offsets) = unzip [(x, i) | (x, i) <- zip (last ls) [0..], x /= ' ']
+      rows = map (spliti (tail offsets)) (init ls)
+      columns = (map (map read . filter nonempty . transpose) (transpose rows))
+  in sum (zipWith op ops columns)
 
 input = readFile "6.txt"
 test = fmap sol2 input
