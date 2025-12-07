@@ -18,7 +18,7 @@ sol2 s =
   let ls = lines s
       (ops, offsets) = unzip [(x, i) | (x, i) <- zip (last ls) [0..], x /= ' ']
       rows = map (spliti (tail offsets)) (init ls)
-      columns = (map (map read . filter nonempty . transpose) (transpose rows))
+      columns = map (map read . filter nonempty . transpose) (transpose rows)
   in sum (zipWith op ops columns)
 
 input = readFile "6.txt"
