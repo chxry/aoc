@@ -1,3 +1,4 @@
+module Day6 where
 import Data.List
 
 op '+' = sum

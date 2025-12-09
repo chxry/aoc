@@ -1,3 +1,4 @@
+module Day4 where
 import Grid
 
 remove g@(G w h xs) = gridFromList w h [f (get g (x, y)) n | y <- [0..h - 1], x <- [0..w - 1], let n = sum (neighbours g 0 (x, y))]

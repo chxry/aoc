@@ -1,3 +1,4 @@
+module Day5 where
 import Data.List.Split
 import Data.List
 import Data.Function

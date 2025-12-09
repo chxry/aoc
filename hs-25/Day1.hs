@@ -1,3 +1,4 @@
+module Day1 where
 rotate 'L' 0 = 99
 rotate 'L' n = n - 1
 rotate 'R' 99 = 0

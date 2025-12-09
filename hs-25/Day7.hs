@@ -1,3 +1,4 @@
+module Day7 where
 import Data.List
 import Data.Maybe
 

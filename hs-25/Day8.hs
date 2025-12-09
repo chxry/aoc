@@ -1,7 +1,7 @@
+module Day8 where
 import Data.List
 import Data.List.Split
-
-pairs xs = [(x, y) | (x:ys) <- tails xs, y <- ys]
+import Util
 
 parseline s = let [a,b,c] = splitOn "," s
               in (read a, read b, read c)
